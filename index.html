@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DogeMarketCap - To the Moon!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --doge-yellow: #e1b303;
+            --doge-gold: #ba9f33;
+            --doge-sand: #f0e1b2;
+            --doge-dark: #1e1e1e;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ba9f33;
+            background-image: radial-gradient(circle at 20% 30%, #d4bf6a 0%, #ba9f33 100%);
+            color: #1a1a1a;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden; /* Evita scroll horizontal */
+        }
+
+        .doge-meme-font {
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .doge-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid #000;
+            box-shadow: 6px 6px 0px #000;
+            border-radius: 20px;
+            transition: transform 0.2s;
+        }
+
+        /* Ajuste de sombra para desktop */
+        @media (min-width: 768px) {
+            .doge-card {
+                border-width: 4px;
+                box-shadow: 8px 8px 0px #000;
+            }
+        }
+
+        .doge-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 10px 10px 0px #000;
+        }
+
+        .doge-header {
+            background: #000;
+            color: var(--doge-yellow);
+            border-bottom: 4px solid var(--doge-yellow);
+        }
+
+        .input-doge-style {
+            background: #fff;
+            border: 3px solid #000;
+            border-radius: 12px;
+            font-weight: bold;
+            -webkit-appearance: none; /* Remove estilos mobile padrão */
+        }
+
+        #chart-container {
+            height: 350px; /* Menor no mobile */
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            #chart-container {
+                height: 450px;
+            }
+        }
+
+        .shiba-bg {
+            position: fixed;
+            bottom: -30px;
+            right: -10px;
+            opacity: 0.15;
+            z-index: -1;
+            width: 250px;
+            pointer-events: none;
+        }
+
+        @media (min-width: 1024px) {
+            .shiba-bg {
+                width: 400px;
+                opacity: 0.2;
+            }
+        }
+
+        .status-badge {
+            background: #222;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 99px;
+            border: 1px solid #444;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body class="pb-8">
+
+    <img src="https://cryptologos.cc/logos/dogecoin-doge-logo.png" alt="Doge" class="shiba-bg">
+
+    <header class="doge-header sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2 md:gap-3">
+                <div class="bg-white p-1 rounded-full border-2 border-black shrink-0">
+                    <img src="https://cryptologos.cc/logos/dogecoin-doge-logo.png" class="w-7 h-7 md:w-10 md:h-10" alt="Logo">
+                </div>
+                <h1 class="text-xl md:text-3xl font-black tracking-tighter doge-meme-font italic leading-none">DOGEMARKET</h1>
+            </div>
+            
+            <div id="connection-status" class="status-badge flex items-center gap-2">
+                <div id="status-dot" class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></div>
+                <span id="status-text" class="text-[9px] md:text-[10px] font-bold uppercase">LIVE</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-6 md:py-8">
+        
+        <!-- Preço e Conversor -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-8">
+            <!-- Bloco de Preço -->
+            <div class="lg:col-span-2 doge-card p-5 md:p-8 relative overflow-hidden">
+                <div class="hidden sm:block absolute top-2 right-4 doge-meme-font text-yellow-600 opacity-40 font-bold text-lg">so price... many money</div>
+                
+                <div class="flex items-center gap-4 md:gap-5 mb-6">
+                    <div class="bg-yellow-400 rounded-2xl p-2 md:p-3 border-4 border-black shrink-0">
+                         <img src="https://cryptologos.cc/logos/dogecoin-doge-logo.png" alt="Doge Logo" class="w-12 h-12 md:w-16 md:h-16">
+                    </div>
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-black doge-meme-font leading-tight">Dogecoin</h2>
+                        <div class="flex flex-wrap gap-2 mt-1">
+                            <span class="bg-black text-yellow-400 text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest italic">Rank #1 do Coração</span>
+                            <span class="bg-blue-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">To The Moon 🚀</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8 mt-6 border-t-2 border-dashed border-gray-200 pt-6">
+                    <div>
+                        <p class="text-gray-500 font-bold text-[10px] uppercase mb-1">Preço (USD)</p>
+                        <p id="price-usd" class="text-3xl md:text-5xl font-black tracking-tighter text-black">$0.0000</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 font-bold text-[10px] uppercase mb-1">Preço (BRL)</p>
+                        <p id="price-brl" class="text-3xl md:text-5xl font-black tracking-tighter text-yellow-600">R$0.0000</p>
+                    </div>
+                </div>
+                <div id="price-change" class="mt-4 inline-block px-3 py-1 rounded-lg font-black text-lg md:text-xl doge-meme-font">
+                    0.00%
+                </div>
+            </div>
+
+            <!-- Conversor -->
+            <div class="doge-card p-6 md:p-8 bg-yellow-50">
+                <h3 class="text-lg md:text-xl font-black mb-6 flex items-center gap-2 doge-meme-font">
+                    <span>🔄</span> MUITO CÂMBIO
+                </h3>
+                <div class="space-y-4">
+                    <div class="relative">
+                        <label class="text-[10px] font-black text-gray-700 mb-1 block uppercase">DOGE</label>
+                        <input type="number" id="input-doge" value="1" class="w-full input-doge-style py-3 px-4 text-lg outline-none">
+                        <span class="absolute right-4 top-8 md:top-9 text-xl">🐕</span>
+                    </div>
+                    <div class="flex justify-center -my-2">
+                        <span class="bg-black text-white rounded-full w-6 h-6 flex items-center justify-center text-[10px]">⇅</span>
+                    </div>
+                    <div class="relative">
+                        <label class="text-[10px] font-black text-gray-700 mb-1 block uppercase">BRL (Real)</label>
+                        <input type="number" id="input-brl" class="w-full input-doge-style py-3 px-4 text-lg outline-none">
+                        <span class="absolute right-4 top-8 md:top-9 font-bold text-gray-400">R$</span>
+                    </div>
+                </div>
+                <p class="mt-6 text-[10px] text-black font-medium italic text-center doge-meme-font opacity-80">
+                    "Such math, very logic."
+                </p>
+            </div>
+        </div>
+
+        <!-- Gráfico -->
+        <div class="doge-card overflow-hidden mb-8 border-4 border-black">
+            <div class="p-4 md:p-5 border-b-4 border-black flex flex-col sm:row sm:justify-between sm:items-center bg-black text-white gap-2">
+                <h3 class="font-black doge-meme-font text-lg italic tracking-tight uppercase">Velas do Shiba (BRL)</h3>
+                <span class="text-[9px] bg-yellow-500 px-3 py-1 rounded-full text-black font-bold uppercase self-start sm:self-center">Live Wow</span>
+            </div>
+            <div id="chart-container"></div>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            <div class="doge-card p-4">
+                <p class="text-gray-500 font-bold text-[9px] uppercase mb-1">Cap. Mercado</p>
+                <p class="font-black text-sm md:text-lg tracking-tight">MUITOS BILHÕES</p>
+            </div>
+            <div class="doge-card p-4">
+                <p class="text-gray-500 font-bold text-[9px] uppercase mb-1">Volume 24h</p>
+                <p class="font-black text-sm md:text-lg tracking-tight text-green-600">MUITO ALTO</p>
+            </div>
+            <div class="doge-card p-4">
+                <p class="text-gray-500 font-bold text-[9px] uppercase mb-1">Stock</p>
+                <p class="font-black text-sm md:text-lg tracking-tight uppercase">Infinito uau</p>
+            </div>
+            <div class="doge-card p-4 bg-black text-white">
+                <p class="text-yellow-500 font-bold text-[9px] uppercase mb-1">Elon Musk</p>
+                <p class="font-black text-sm md:text-lg text-yellow-400 animate-pulse">BULLISH 🚀</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Lógica de API mantida fielmente
+        const SYMBOL = 'DOGEUSDT';
+        const BINANCE_REST = 'https://api.binance.com/api/v3';
+        let currentPriceUSD = 0;
+        let usdToBrlRate = 5.00; 
+
+        let chart;
+        let candleSeries;
+
+        function initChart() {
+            const chartElement = document.getElementById('chart-container');
+            if (typeof LightweightCharts === 'undefined') {
+                setTimeout(initChart, 100);
+                return;
+            }
+
+            chart = LightweightCharts.createChart(chartElement, {
+                layout: { background: { color: '#ffffff' }, textColor: '#000000' },
+                grid: { vertLines: { color: '#f0f0f0' }, horzLines: { color: '#f0f0f0' } },
+                width: chartElement.clientWidth,
+                height: chartElement.clientHeight,
+                localization: { priceFormatter: price => `R$ ${price.toFixed(4)}` },
+            });
+
+            candleSeries = chart.addCandlestickSeries({
+                upColor: '#e1b303',
+                downColor: '#000000',
+                borderDownColor: '#000000',
+                borderUpColor: '#e1b303',
+                wickDownColor: '#000000',
+                wickUpColor: '#e1b303',
+                priceFormat: { type: 'price', precision: 4, minMove: 0.0001 },
+            });
+
+            window.addEventListener('resize', () => {
+                chart.applyOptions({ width: chartElement.clientWidth });
+            });
+
+            startDataLoop();
+        }
+
+        async function startDataLoop() {
+            const statusDot = document.getElementById('status-dot');
+            await updateUSDBRL();
+            await fetchHistory();
+            
+            setInterval(async () => {
+                try {
+                    if (Date.now() % 30000 < 2000) await updateUSDBRL();
+                    const [klineRes, tickerRes] = await Promise.all([
+                        fetch(`${BINANCE_REST}/klines?symbol=${SYMBOL}&interval=1m&limit=1`),
+                        fetch(`${BINANCE_REST}/ticker/24hr?symbol=${SYMBOL}`)
+                    ]);
+                    const klineData = await klineRes.json();
+                    const tickerData = await tickerRes.json();
+
+                    if (klineData && klineData[0]) {
+                        const k = klineData[0];
+                        candleSeries.update({
+                            time: k[0] / 1000,
+                            open: parseFloat(k[1]) * usdToBrlRate,
+                            high: parseFloat(k[2]) * usdToBrlRate,
+                            low: parseFloat(k[3]) * usdToBrlRate,
+                            close: parseFloat(k[4]) * usdToBrlRate
+                        });
+                        updateUI(parseFloat(tickerData.lastPrice), parseFloat(tickerData.priceChangePercent));
+                        statusDot.className = 'w-2 h-2 rounded-full bg-green-500 animate-pulse';
+                    }
+                } catch (err) {
+                    statusDot.className = 'w-2 h-2 rounded-full bg-red-500';
+                }
+            }, 2000); 
+        }
+
+        async function fetchHistory() {
+            try {
+                const res = await fetch(`${BINANCE_REST}/klines?symbol=${SYMBOL}&interval=1m&limit=100`);
+                const data = await res.json();
+                const formattedData = data.map(d => ({
+                    time: d[0] / 1000,
+                    open: parseFloat(d[1]) * usdToBrlRate,
+                    high: parseFloat(d[2]) * usdToBrlRate,
+                    low: parseFloat(d[3]) * usdToBrlRate,
+                    close: parseFloat(d[4]) * usdToBrlRate
+                }));
+                candleSeries.setData(formattedData);
+            } catch (err) {}
+        }
+
+        async function updateUSDBRL() {
+            try {
+                const res = await fetch('https://economia.awesomeapi.com.br/last/USD-BRL');
+                const data = await res.json();
+                usdToBrlRate = parseFloat(data.USDBRL.bid);
+            } catch (e) {}
+        }
+
+        function updateUI(priceUSD, changePercent = null) {
+            currentPriceUSD = priceUSD;
+            const priceBRL = priceUSD * usdToBrlRate;
+            document.getElementById('price-usd').innerText = `$${priceUSD.toFixed(4)}`;
+            document.getElementById('price-brl').innerText = `R$${priceBRL.toFixed(4)}`;
+
+            if (changePercent !== null) {
+                const el = document.getElementById('price-change');
+                el.innerText = `${changePercent > 0 ? '🚀 +' : '📉 '}${changePercent}%`;
+                el.className = changePercent >= 0 
+                    ? 'mt-4 inline-block px-4 py-1 rounded-lg font-black text-lg md:text-xl doge-meme-font bg-green-100 text-green-600 border-2 border-green-600' 
+                    : 'mt-4 inline-block px-4 py-1 rounded-lg font-black text-lg md:text-xl doge-meme-font bg-red-100 text-red-600 border-2 border-red-600';
+            }
+
+            const inputDoge = document.getElementById('input-doge');
+            const inputBrl = document.getElementById('input-brl');
+            if (document.activeElement !== inputDoge && document.activeElement !== inputBrl) {
+                const amount = parseFloat(inputDoge.value) || 0;
+                inputBrl.value = (amount * priceBRL).toFixed(2);
+            }
+        }
+
+        document.getElementById('input-doge').addEventListener('input', (e) => {
+            const doge = parseFloat(e.target.value) || 0;
+            const priceBRL = currentPriceUSD * usdToBrlRate;
+            document.getElementById('input-brl').value = (doge * priceBRL).toFixed(2);
+        });
+
+        document.getElementById('input-brl').addEventListener('input', (e) => {
+            const brl = parseFloat(e.target.value) || 0;
+            const priceBRL = currentPriceUSD * usdToBrlRate;
+            document.getElementById('input-doge').value = (brl / priceBRL).toFixed(4);
+        });
+
+        window.onload = async () => {
+            await updateUSDBRL();
+            initChart();
+        };
+    </script>
+</body>
+</html>
