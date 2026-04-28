@@ -22,7 +22,7 @@
             color: #1a1a1a;
             min-height: 100vh;
             margin: 0;
-            overflow-x: hidden; /* Evita scroll horizontal */
+            overflow-x: hidden;
         }
 
         .doge-meme-font {
@@ -37,7 +37,6 @@
             transition: transform 0.2s;
         }
 
-        /* Ajuste de sombra para desktop */
         @media (min-width: 768px) {
             .doge-card {
                 border-width: 4px;
@@ -61,11 +60,11 @@
             border: 3px solid #000;
             border-radius: 12px;
             font-weight: bold;
-            -webkit-appearance: none; /* Remove estilos mobile padrão */
+            -webkit-appearance: none;
         }
 
         #chart-container {
-            height: 350px; /* Menor no mobile */
+            height: 350px;
             width: 100%;
         }
 
@@ -85,13 +84,6 @@
             pointer-events: none;
         }
 
-        @media (min-width: 1024px) {
-            .shiba-bg {
-                width: 400px;
-                opacity: 0.2;
-            }
-        }
-
         .status-badge {
             background: #222;
             color: #fff;
@@ -99,6 +91,16 @@
             border-radius: 99px;
             border: 1px solid #444;
             white-space: nowrap;
+        }
+
+        /* Estilo para a inversão */
+        #converter-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .flip-order {
+            flex-direction: column-reverse !important;
         }
     </style>
 </head>
@@ -124,9 +126,7 @@
 
     <main class="container mx-auto px-4 py-6 md:py-8">
         
-        <!-- Preço e Conversor -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-8">
-            <!-- Bloco de Preço -->
             <div class="lg:col-span-2 doge-card p-5 md:p-8 relative overflow-hidden">
                 <div class="hidden sm:block absolute top-2 right-4 doge-meme-font text-yellow-600 opacity-40 font-bold text-lg">so price... many money</div>
                 
@@ -158,37 +158,44 @@
                 </div>
             </div>
 
-            <!-- Conversor -->
+            <!-- Conversor Ajustado -->
             <div class="doge-card p-6 md:p-8 bg-yellow-50">
                 <h3 class="text-lg md:text-xl font-black mb-6 flex items-center gap-2 doge-meme-font">
                     <span>🔄</span> MUITO MUITO CÂMBIO
                 </h3>
-                <div class="space-y-4">
-                    <div class="relative">
-                        <label class="text-[10px] font-black text-gray-700 mb-1 block uppercase">DOGE</label>
-                        <input type="number" id="input-doge" value="1" class="w-full input-doge-style py-3 px-4 text-lg outline-none">
+                
+                <!-- Wrapper que permite inverter a ordem dos inputs -->
+                <div id="converter-wrapper" class="flex flex-col space-y-4">
+                    <!-- Bloco DOGE -->
+                    <div id="doge-input-block" class="relative">
+                        <label class="text-[10px] font-black text-gray-700 mb-1 block uppercase">DOGE (Quantidade)</label>
+                        <input type="number" id="input-doge" placeholder="0.00" class="w-full input-doge-style py-3 px-4 text-lg outline-none" step="any">
                         <span class="absolute right-4 top-8 md:top-9">
-    <img src="https://cryptologos.cc/logos/dogecoin-doge-logo.png" 
-         alt="Dogecoin" 
-         class="w-6 h-6">
-</span>
+                            <img src="https://cryptologos.cc/logos/dogecoin-doge-logo.png" alt="Dogecoin" class="w-6 h-6">
+                        </span>
                     </div>
-                    <div class="flex justify-center -my-2">
-                        <span class="bg-black text-white rounded-full w-6 h-6 flex items-center justify-center text-[10px]">⇅</span>
+
+                    <!-- Botão de Inversão -->
+                    <div class="flex justify-center -my-2 z-10">
+                        <button id="btn-flip" class="bg-black text-white hover:bg-yellow-500 hover:text-black transition-colors rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold border-2 border-yellow-400 shadow-sm">
+                            ⇅
+                        </button>
                     </div>
-                    <div class="relative">
-                        <label class="text-[10px] font-black text-gray-700 mb-1 block uppercase">BRL (Real)</label>
-                        <input type="number" id="input-brl" class="w-full input-doge-style py-3 px-4 text-lg outline-none">
-                        <span class="absolute right-4 top-8 md:top-9 font-bold text-gray-400 > 🇧🇷<span>
+
+                    <!-- Bloco BRL -->
+                    <div id="brl-input-block" class="relative">
+                        <label class="text-[10px] font-black text-gray-700 mb-1 block uppercase">BRL (Total em Reais)</label>
+                        <input type="number" id="input-brl" placeholder="0.00" class="w-full input-doge-style py-3 px-4 text-lg outline-none" step="any">
+                        <span class="absolute right-4 top-8 md:top-9 text-xl">🇧🇷</span>
                     </div>
                 </div>
+
                 <p class="mt-6 text-[10px] text-black font-medium italic text-center doge-meme-font opacity-80">
-                    "Such math, very logic."
+                    "Such conversion, very money."
                 </p>
             </div>
         </div>
 
-        <!-- Gráfico -->
         <div class="doge-card overflow-hidden mb-8 border-4 border-black">
             <div class="p-4 md:p-5 border-b-4 border-black flex flex-col sm:row sm:justify-between sm:items-center bg-black text-white gap-2">
                 <h3 class="font-black doge-meme-font text-lg italic tracking-tight uppercase">Velas do Shiba (BRL)</h3>
@@ -197,7 +204,6 @@
             <div id="chart-container"></div>
         </div>
 
-        <!-- Stats -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             <div class="doge-card p-4">
                 <p class="text-gray-500 font-bold text-[9px] uppercase mb-1">Cap. Mercado</p>
@@ -219,7 +225,6 @@
     </main>
 
     <script>
-        // Lógica de API mantida fielmente
         const SYMBOL = 'DOGEUSDT';
         const BINANCE_REST = 'https://api.binance.com/api/v3';
         let currentPriceUSD = 0;
@@ -227,6 +232,8 @@
 
         let chart;
         let candleSeries;
+        
+        let lastUpdatedInput = 'doge'; 
 
         function initChart() {
             const chartElement = document.getElementById('chart-container');
@@ -313,12 +320,15 @@
                 const res = await fetch('https://economia.awesomeapi.com.br/last/USD-BRL');
                 const data = await res.json();
                 usdToBrlRate = parseFloat(data.USDBRL.bid);
-            } catch (e) {}
+            } catch (e) {
+                console.error("Erro ao buscar câmbio BRL");
+            }
         }
 
         function updateUI(priceUSD, changePercent = null) {
             currentPriceUSD = priceUSD;
             const priceBRL = priceUSD * usdToBrlRate;
+            
             document.getElementById('price-usd').innerText = `$${priceUSD.toFixed(4)}`;
             document.getElementById('price-brl').innerText = `R$${priceBRL.toFixed(4)}`;
 
@@ -332,27 +342,56 @@
 
             const inputDoge = document.getElementById('input-doge');
             const inputBrl = document.getElementById('input-brl');
+            
             if (document.activeElement !== inputDoge && document.activeElement !== inputBrl) {
-                const amount = parseFloat(inputDoge.value) || 0;
-                inputBrl.value = (amount * priceBRL).toFixed(2);
+                if (lastUpdatedInput === 'doge' && inputDoge.value) {
+                    const amount = parseFloat(inputDoge.value) || 0;
+                    inputBrl.value = (amount * priceBRL).toFixed(2);
+                } else if (lastUpdatedInput === 'brl' && inputBrl.value) {
+                    const brl = parseFloat(inputBrl.value) || 0;
+                    inputDoge.value = (brl / priceBRL).toFixed(4);
+                }
             }
         }
 
+        // Eventos de Digitação
         document.getElementById('input-doge').addEventListener('input', (e) => {
-            const doge = parseFloat(e.target.value) || 0;
+            lastUpdatedInput = 'doge';
+            const doge = parseFloat(e.target.value);
             const priceBRL = currentPriceUSD * usdToBrlRate;
-            document.getElementById('input-brl').value = (doge * priceBRL).toFixed(2);
+            const inputBrl = document.getElementById('input-brl');
+            
+            if (!isNaN(doge)) {
+                inputBrl.value = (doge * priceBRL).toFixed(2);
+            } else {
+                inputBrl.value = '';
+            }
         });
 
         document.getElementById('input-brl').addEventListener('input', (e) => {
-            const brl = parseFloat(e.target.value) || 0;
+            lastUpdatedInput = 'brl';
+            const brl = parseFloat(e.target.value);
             const priceBRL = currentPriceUSD * usdToBrlRate;
-            document.getElementById('input-doge').value = (brl / priceBRL).toFixed(4);
+            const inputDoge = document.getElementById('input-doge');
+            
+            if (!isNaN(brl) && priceBRL > 0) {
+                inputDoge.value = (brl / priceBRL).toFixed(4);
+            } else {
+                inputDoge.value = '';
+            }
+        });
+
+        // Lógica de Inversão de Ordem
+        document.getElementById('btn-flip').addEventListener('click', () => {
+            const wrapper = document.getElementById('converter-wrapper');
+            wrapper.classList.toggle('flip-order');
         });
 
         window.onload = async () => {
             await updateUSDBRL();
             initChart();
+            document.getElementById('input-doge').value = "1000";
+            document.getElementById('input-doge').dispatchEvent(new Event('input'));
         };
     </script>
 </body>
