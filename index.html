@@ -305,7 +305,7 @@
 
         async function fetchHistory() {
             try {
-                const res = await fetch(`${BINANCE_REST}/klines?symbol=${SYMBOL}&interval=1m&limit=100`);
+                const res = await fetch(`${BINANCE_REST}/klines?symbol=${SYMBOL}&interval=1m&limit=1000`);
                 const data = await res.json();
                 const formattedData = data.map(d => ({
                     time: d[0] / 1000,
